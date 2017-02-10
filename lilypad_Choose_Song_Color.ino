@@ -15,66 +15,13 @@ class Note {
   int pitch;    // the note's pitch to play
   int duration; // length to play note 0,2,4,8
 
-  //TODO: change this, this is a bad idea to store 3 ints for each node
-  //      instead, look up the color for each note when playing the node
-  //      more processing is required, but less memory is required for the note arrays
-  int red;      // red component of tri-color
-  int green;    // green component of tri-color
-  int blue;     // blue component of tri-color
-  
   public:
   Note( int pitch, int duration ) {
     this->pitch = pitch;
     this->duration = duration;
-
-    switch (pitch) {
-      case NOTE_C1: case NOTE_C2: case NOTE_C3: case NOTE_C4:
-      case NOTE_C5: case NOTE_C6: case NOTE_C7: case NOTE_C8:
-        red = 255; green = 0; blue = 0; break; // C
-      case NOTE_CS1: case NOTE_CS2: case NOTE_CS3: case NOTE_CS4:
-      case NOTE_CS5: case NOTE_CS6: case NOTE_CS7: case NOTE_CS8:
-        red = 204; green = 102; blue = 0; break; // CS
-      case NOTE_D1: case NOTE_D2: case NOTE_D3: case NOTE_D4:
-      case NOTE_D5: case NOTE_D6: case NOTE_D7: case NOTE_D8:
-        red = 200; green = 50; blue = 0; break; // D
-      case NOTE_DS1: case NOTE_DS2: case NOTE_DS3: case NOTE_DS4:
-      case NOTE_DS5: case NOTE_DS6: case NOTE_DS7: case NOTE_DS8:
-        red = 102; green = 24; blue = 0; break; // DS
-      case NOTE_E1: case NOTE_E2: case NOTE_E3: case NOTE_E4:
-      case NOTE_E5: case NOTE_E6: case NOTE_E7: 
-        red = 204; green = 150; blue = 0; break; // E
-      case NOTE_F1: case NOTE_F2: case NOTE_F3: case NOTE_F4:
-      case NOTE_F5: case NOTE_F6: case NOTE_F7: 
-        red = 128; green = 255; blue = 0; break; // F
-      case NOTE_FS1: case NOTE_FS2: case NOTE_FS3: case NOTE_FS4:
-      case NOTE_FS5: case NOTE_FS6: case NOTE_FS7: 
-        red = 0; green = 255; blue = 0; break; // FS
-      case NOTE_G1: case NOTE_G2: case NOTE_G3: case NOTE_G4:
-      case NOTE_G5: case NOTE_G6: case NOTE_G7: 
-        red = 0; green = 255; blue = 255; break; // G
-      case NOTE_GS1: case NOTE_GS2: case NOTE_GS3: case NOTE_GS4:
-      case NOTE_GS5: case NOTE_GS6: case NOTE_GS7: 
-        red = 0; green = 0; blue = 204; break; // GS
-      case NOTE_A1: case NOTE_A2: case NOTE_A3: case NOTE_A4:
-      case NOTE_A5: case NOTE_A6: case NOTE_A7: 
-        red = 0; green = 0; blue = 102; break; // A
-      case NOTE_AS1: case NOTE_AS2: case NOTE_AS3: case NOTE_AS4:
-      case NOTE_AS5: case NOTE_AS6: case NOTE_AS7:
-        red = 102; green = 0; blue = 102; break; // AS
-      case NOTE_B0: case NOTE_B1: case NOTE_B2: case NOTE_B3: case NOTE_B4:
-      case NOTE_B5: case NOTE_B6: case NOTE_B7: 
-        red = 40; green = 0; blue = 40; break; // B
-      default:
-        this->red = 0;
-        this->green = 0;
-        this->blue = 0;
-    }
   }
   int getPitch() { return pitch; }
   int getDuration() { return duration; }
-  int getRed() { return red; }
-  int getGreen() { return green; }
-  int getBlue() { return blue; }
 };
 
 class Song {
@@ -239,7 +186,7 @@ void setup() {
 }
 
 void loop() {
-  color(0,0,0); // turn color off
+  //color(0,0,0); // turn color off
 
   //if the button is pressed, light LED (and switch song)
   if (digitalRead(buttonPin)==LOW) { // pressed
@@ -265,7 +212,8 @@ void loop() {
       //divided by the note type.
       //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
       int noteDuration = 1000/note->getDuration();
-      color(note->getRed(),note->getGreen(),note->getBlue());
+      //color(note->getRed(),note->getGreen(),note->getBlue());
+      color(note->getPitch());
       tone(buzzer, note->getPitch(), noteDuration);
   
       // to distinguish the notes, set a minimum time between them.
@@ -279,12 +227,61 @@ void loop() {
   }
 
   // Turn the color off after the song stops
-  color(0,0,0);
+  //color(0,0,0);
   
 }
 
-void color (unsigned char red, unsigned char green, unsigned char blue)   //the color generating function 
+//void color (unsigned char red, unsigned char green, unsigned char blue)   //the color generating function 
+void color(int pitch) 
 {    
+  //TODO: change this, this is a bad idea to store 3 ints for each node
+  //      instead, look up the color for each note when playing the node
+  //      more processing is required, but less memory is required for the note arrays
+  int red = 0;      // red component of tri-color
+  int green = 0;    // green component of tri-color
+  int blue = 0;     // blue component of tri-color
+  
+    switch (pitch) {
+      case NOTE_C1: case NOTE_C2: case NOTE_C3: case NOTE_C4:
+      case NOTE_C5: case NOTE_C6: case NOTE_C7: case NOTE_C8:
+        red = 255; green = 0; blue = 0; break; // C
+      case NOTE_CS1: case NOTE_CS2: case NOTE_CS3: case NOTE_CS4:
+      case NOTE_CS5: case NOTE_CS6: case NOTE_CS7: case NOTE_CS8:
+        red = 204; green = 102; blue = 0; break; // CS
+      case NOTE_D1: case NOTE_D2: case NOTE_D3: case NOTE_D4:
+      case NOTE_D5: case NOTE_D6: case NOTE_D7: case NOTE_D8:
+        red = 200; green = 50; blue = 0; break; // D
+      case NOTE_DS1: case NOTE_DS2: case NOTE_DS3: case NOTE_DS4:
+      case NOTE_DS5: case NOTE_DS6: case NOTE_DS7: case NOTE_DS8:
+        red = 102; green = 24; blue = 0; break; // DS
+      case NOTE_E1: case NOTE_E2: case NOTE_E3: case NOTE_E4:
+      case NOTE_E5: case NOTE_E6: case NOTE_E7: 
+        red = 204; green = 150; blue = 0; break; // E
+      case NOTE_F1: case NOTE_F2: case NOTE_F3: case NOTE_F4:
+      case NOTE_F5: case NOTE_F6: case NOTE_F7: 
+        red = 128; green = 255; blue = 0; break; // F
+      case NOTE_FS1: case NOTE_FS2: case NOTE_FS3: case NOTE_FS4:
+      case NOTE_FS5: case NOTE_FS6: case NOTE_FS7: 
+        red = 0; green = 255; blue = 0; break; // FS
+      case NOTE_G1: case NOTE_G2: case NOTE_G3: case NOTE_G4:
+      case NOTE_G5: case NOTE_G6: case NOTE_G7: 
+        red = 0; green = 255; blue = 255; break; // G
+      case NOTE_GS1: case NOTE_GS2: case NOTE_GS3: case NOTE_GS4:
+      case NOTE_GS5: case NOTE_GS6: case NOTE_GS7: 
+        red = 0; green = 0; blue = 204; break; // GS
+      case NOTE_A1: case NOTE_A2: case NOTE_A3: case NOTE_A4:
+      case NOTE_A5: case NOTE_A6: case NOTE_A7: 
+        red = 0; green = 0; blue = 102; break; // A
+      case NOTE_AS1: case NOTE_AS2: case NOTE_AS3: case NOTE_AS4:
+      case NOTE_AS5: case NOTE_AS6: case NOTE_AS7:
+        red = 102; green = 0; blue = 102; break; // AS
+      case NOTE_B0: case NOTE_B1: case NOTE_B2: case NOTE_B3: case NOTE_B4:
+      case NOTE_B5: case NOTE_B6: case NOTE_B7: 
+        red = 40; green = 0; blue = 40; break; // B
+      //default: 
+      // no change
+    }
+    
      analogWrite(redPin, 255-red);   
      analogWrite(greenPin, 255-green);       
      analogWrite(bluePin, 255-blue);   
